@@ -1,0 +1,67 @@
+body {
+    background: url('https://i.pinimg.com/736x/54/86/5d/54865d779acafd036facb4ae6686b0c0.jpg') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+  }
+  
+  .container {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0 20px cyan;
+    width: 300px;
+  }
+  
+  h2 {
+    color: cyan;
+    margin-bottom: 20px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  input {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid cyan;
+    background: transparent;
+    color: cyan;
+    border-radius: 5px;
+  }
+  
+  input::placeholder {
+    color: cyan;
+  }
+  
+  button {
+    background: cyan;
+    color: black;
+    padding: 10px;
+    border: none;
+    margin-top: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background: #00ffff;
+  }
+  
+  .login-link {
+    color: cyan;
+    display: block;
+    margin-top: 15px;
+    text-decoration: none;
+  }
+  
+  .login-link:hover {
+    text-decoration: underline;
+  }
+  
