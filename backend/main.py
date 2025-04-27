@@ -5,11 +5,21 @@ import numpy as np
 from werkzeug.utils import secure_filename
 from encoding import iterate_over_images
 
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))  # Goes up to /picshield2/
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")      # /picshield2/frontend/
+HTML_DIR = os.path.join(FRONTEND_DIR, "html")  
 
 
-app=Flask(__name__)
+
+
+app=Flask(__name__,
+          template_folder=os.path.join(FRONTEND_DIR, "html"),
+          static_folder=os.path.join(FRONTEND_DIR, "static"))
+          
 UPLOAD_FOLDER='../uploads'
 OUTPUT_FOLDER='../outputs'
+
+
 os.makedirs(UPLOAD_FOLDER,exist_ok=True)
 os.makedirs(OUTPUT_FOLDER,exist_ok=True)
 
@@ -17,7 +27,7 @@ os.makedirs(OUTPUT_FOLDER,exist_ok=True)
 #home page
 @app.route('/')
 def index():
-    return render_template('home.html')
+    return render_template('login.html')
 
 
 #user uploads image
