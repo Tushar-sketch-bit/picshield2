@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage with File Upload</title>
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-left">MyWebsite</div>
+        <div class="nav-right">
+            <button onclick="navigate('home')">Home</button>
+            <button onclick="navigate('about')">About</button>
+            <button onclick="navigate('contact')">Contact</button>
+            <button onclick="navigate('login')">Login</button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="upload-box">
+            <h2>Upload Your File</h2>
+            <label for="fileInput">submit</label>
+            <input type="file" id="fileInput" />
+            <button onclick="uploadFile()">Submit</button>
+        </div>
+    </main>
+
+    <script src="home.js"></script>
+</body>
+</html>
