@@ -15,7 +15,10 @@
       <input type="password" placeholder="Password" required>
       <button type="submit">Login</button>
     </form>
-    <a href="register.html" class="register-link">New User? Register</a>
+    <form action="returntoregister">
+    <a href="{{url_for('html',filename=html/register.html)}}" class="register-link">New User? Register</a>
+  </form>
   </div>
+
 </body>
 </html>

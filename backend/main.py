@@ -63,16 +63,19 @@ def serve_image(image_id):
     log_access(image_id, request.remote_addr)
     return send_file(f'encoded_{image_id}.png')
 
-@app.route('/downloads/<filename>',methods=['GET'])
+@app.route('/downloads/<filename>')
 def download_img(filename):
+    file_path=os.path.join(OUTPUT_FOLDER,filename)
+    if not os.path.join(OUTPUT_FOLDER,filename):
+        return 'file not found',404
     return send_file(
-        os.path.join(OUTPUT_FOLDER,filename),
-        as_attachment=True,
-        download_name=filename
+        file_path,as_attachment=True
     )
     
     
-
+@app.route('/returntoregister',methods=['GET'])
+def return_home():
+    return render_template('register.html')
 
 if __name__=='__main__':
     app.run(debug=True)
