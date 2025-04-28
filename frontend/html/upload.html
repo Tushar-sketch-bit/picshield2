@@ -9,10 +9,11 @@
 <body>
   <div class="container">
     <h2>Upload Your File</h2>
-    <form>
-      <label for="fileInput">fileInput</label>
-      <input type="file" id="fileInput" required>
-      <button type="submit">Upload</button>
+    <!-- SINGLE FORM TAG (no nesting) -->
+    <form action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+      <label for="fileInput">Choose an image:</label>
+      <input type="file" name="image" accept="image/*" id="fileInput" required>
+      <button type="submit">Encode and Download</button>
     </form>
   </div>
 </body>

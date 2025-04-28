@@ -1,10 +1,10 @@
-from flask import Flask,request,send_file,render_template,Request,jsonify
+from flask import Flask,request,send_file,render_template,Request,jsonify,redirect,url_for,flash
 from steganography import encoded_img
 import os
 import numpy as np
-from werkzeug.utils import secure_filename
-from encoding import iterate_over_images
-
+from steganography import embed_data
+from database import log_access
+import datetime
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))  # Goes up to /picshield2/
 FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")      # /picshield2/frontend/
 HTML_DIR = os.path.join(FRONTEND_DIR, "html")  
@@ -15,6 +15,8 @@ HTML_DIR = os.path.join(FRONTEND_DIR, "html")
 app=Flask(__name__,
           template_folder=os.path.join(FRONTEND_DIR, "html"),
           static_folder=os.path.join(FRONTEND_DIR, "static"))
+app.secret_key="tushar99"
+
           
 UPLOAD_FOLDER='../uploads'
 OUTPUT_FOLDER='../outputs'
@@ -25,46 +27,51 @@ os.makedirs(OUTPUT_FOLDER,exist_ok=True)
 
 
 #home page
-@app.route('/')
+@app.route('/',methods=['GET'])
 def index():
-    return render_template('login.html')
+    return render_template('upload.html')
 
 
 #user uploads image
 @app.route('/upload',methods=['POST'])
 def upload():
     if 'image' not in request.files:
-      return "no image selected"
-  
-    image=request.files['image']
-    if image.filename=='':
-        return "no selected file"
-    
-    save_path=os.path.join(UPLOAD_FOLDER,image.filename)
-    image.save(save_path)
-    
-    return f"image saved"
-    
-    
-#then it goes in encoding    
-@app.route('/encode',methods=['POST'])
-def encode_image():
-    if 'image' not in Request.files:
-        return jsonify({'error': 'no image file provided'}), 400
-                       
-    image_file=Request.files['image']
-    message=Request.form.__get__('message','')
-    
-    image_path=os.path.join(UPLOAD_FOLDER,image_file.filename)
-    image_file.save(image_path)
-    output_image_path=os.path.join(OUTPUT_FOLDER, 'encoded_'+image_file.filename)
-    if message== None :
-        message=np.random.rand(3,3)
+        flash('no image selected','error')
+        return redirect(url_for('home'))
+    img = request.files['image']
+    if img.filename=='':
+        flash('no image selected','error')
+        return redirect(url_for('home'))
         
-    encoded_img(image_path,message,output_image_path)
-    return send_file(output_image_path,mimetype='image/png')
+    uploaded_path=os.path.join(UPLOAD_FOLDER,img.filename)
+    img.save(uploaded_path)
+    flash('image uploaded succesfully!','success')
+    
+    tracking_data=f"IP:{request.remote_addr} | date,time:{datetime.date,datetime.time}"
+    output_filename=f"encoded_{img.filename}"
+    output_path=os.path.join(OUTPUT_FOLDER,output_filename)
+    
+    # 3. Save encoded image
+    encoded_img(uploaded_path,tracking_data,output_path)
+    
+    
+    return redirect(url_for('download',filename=output_filename))
 
+#@app.route('/encoded/<image_id>')
+def serve_image(image_id):
+    # 4. Log access when someone views the image
+    log_access(image_id, request.remote_addr)
+    return send_file(f'encoded_{image_id}.png')
 
+@app.route('/downloads/<filename>',methods=['GET'])
+def download_img(filename):
+    return send_file(
+        os.path.join(OUTPUT_FOLDER,filename),
+        as_attachment=True,
+        download_name=filename
+    )
+    
+    
 
 
 if __name__=='__main__':
