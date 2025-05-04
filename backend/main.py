@@ -5,6 +5,7 @@ import numpy as np
 from steganography import embed_data
 from database import log_access
 import datetime
+from tracker import track_bp
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))  # Goes up to /picshield2/
 FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")      # /picshield2/frontend/
 HTML_DIR = os.path.join(FRONTEND_DIR, "html")  
@@ -16,6 +17,8 @@ app=Flask(__name__,
           template_folder=os.path.join(FRONTEND_DIR, "html"),
           static_folder=os.path.join(FRONTEND_DIR, "static"))
 app.secret_key="tushar99"
+
+app.register_blueprint(track_bp)
 
           
 UPLOAD_FOLDER='../uploads'
@@ -30,6 +33,13 @@ os.makedirs(OUTPUT_FOLDER,exist_ok=True)
 @app.route('/',methods=['GET'])
 def index():
     return render_template('upload.html')
+
+
+@app.route('/view/<image_id>')
+def view_image(image_id):
+    image_name=f'encoded_{image_id}.jpg'
+    return render_template("view_image.html",image_id=image_id, image_name=image_name)
+
 
 
 #user uploads image
